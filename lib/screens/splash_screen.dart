@@ -1,69 +1,97 @@
+import 'dart:async';
+import 'package:aplikasi_kopi/screens/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'home_screen.dart'; // Pastikan path ke HomeScreen benar
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({super.key, required bool isLoggedIn});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
   @override
   void initState() {
     super.initState();
-    // Navigasi ke HomeScreen setelah 2 detik
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
-      }
+    _startTimerAndNavigate();
+  }
+
+  void _startTimerAndNavigate() {
+    Timer(const Duration(seconds: 3), () {
+      if (!mounted) return;
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const LoginScreen(),
+        ),
+      );
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Body Stack untuk menempatkan latar belakang dan logo di atasnya
+      backgroundColor: Colors.brown[900],
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 1. Latar Belakang (sesuai image_be9f42.jpg)
+
+          // Background image
           Image.asset(
-            // Ganti path ini sesuai dengan lokasi file Anda
-            'assets/backgroundHome1.jpg',
-            fit: BoxFit.fitWidth,
+            'assets/background.png',
+            fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
-              // Fallback jika gambar aset tidak ditemukan
-              return Container(color: Colors.brown[200]);
+              return Container(color: Colors.brown[900]);
             },
           ),
 
-          // 2. Overlay Hitam Transparan (Opsional: untuk membuat logo lebih menonjol)
+          // Overlay
           Container(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withOpacity(0.2),
           ),
 
-          // 3. Konten (Logo Biji Kopi)
+          // Content
           Center(
-            child: SizedBox(
-              width: 80, 
-              height: 80,
-              child: Image.asset(
-                // Ganti path ini sesuai dengan lokasi file logo biji kopi Anda
-                'assets/IconSPlash.png',
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                   // Fallback jika logo aset tidak ditemukan, kembali ke ikon kopi standar
-                  return const Icon(
-                    Icons.coffee, 
-                    size: 30, 
-                    color: Colors.white
-                  );
-                },
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+
+                // Logo
+                SizedBox(
+                  width: 130,
+                  height: 130,
+                  child: Image.asset(
+                    'assets/icom.png', // pastikan nama ini sama di pubspec.yaml
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(
+                        Icons.book_outlined,
+                        size: 80,
+                        color: Colors.white,
+                      );
+                    },
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                const Text(
+                  "Toko Buku-Ku",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1,
+                  ),
+                ),
+
+                const SizedBox(height: 40),
+
+                CircularProgressIndicator(
+                  color: Colors.brown[200],
+                ),
+              ],
             ),
           ),
         ],
